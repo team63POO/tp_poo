@@ -2,6 +2,7 @@ package robots;
 
 import carte.CaseCarte;
 import carte.NatureTerrain;
+import physique.Temps;
 
 public abstract class Robot {
 	private int ligne, colonne, vitesse;
@@ -18,8 +19,13 @@ public abstract class Robot {
 	
 	public long tempsDeplacement(CaseCarte depart, CaseCarte destination, int tailleCases) {
 		long temps=0;
-		temps+=tailleCases/(2*this.getVitesseTerrain(depart.getNature()));
-		temps+=tailleCases/(2*this.getVitesseTerrain(destination.getNature()));
+		try {
+			temps+=tailleCases/(2*this.getVitesseTerrain(depart.getNature()));
+			temps+=tailleCases/(2*this.getVitesseTerrain(destination.getNature()));			
+		}
+		catch (ArithmeticException e) {
+			temps=Temps.tempsInfini;
+		}
 		return temps;
 	}
 
