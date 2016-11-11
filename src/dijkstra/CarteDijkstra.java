@@ -43,4 +43,13 @@ public class CarteDijkstra extends Carte {
 
 		return caseMin;
 	}
+	
+	@Override
+	public String toString() {
+		String s = new String(super.toString());
+		for (int i = 0; i < this.getNbLignes(); i++) 
+			for (int j = 0; j < this.getNbColonnes(); j++)
+				s+=this.getCase(i, j).toString();
+		return s;
+	}
 }

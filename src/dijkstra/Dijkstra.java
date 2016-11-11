@@ -1,6 +1,7 @@
 package dijkstra;
 
 import carte.Direction;
+import physique.Temps;
 
 import java.util.LinkedList;
 
@@ -22,27 +23,32 @@ public class Dijkstra {
 		carte.init(robot.getLigne(), robot.getColonne());
 
 		for (int i = 0; i < (carte.getNbColonnes() * carte.getNbLignes()); i++) {
-			CaseCarteDijkstra caseCarte = carte.minDijkstra();
-			caseCarte.setTraitee(true);
-			this.majVoisins(caseCarte);
+			try {
+				CaseCarteDijkstra caseCarte = carte.minDijkstra();
+				caseCarte.setTraitee(true);
+				this.majVoisins(caseCarte);
+			} catch (UnsupportedOperationException e) {
+				continue;
+			}
 		}
 	}
 
 	public Chemin plusCourtChemin(CaseCarte destination) {
 		Chemin chemin;
+		long poids = ((CaseCarteDijkstra) carte.getCase(destination.getLigne(), destination.getColonne())).getPoids();
 		LinkedList<Direction> directions = new LinkedList<Direction>();
 		CaseCarteDijkstra caseCourante = (CaseCarteDijkstra) carte.getCase(destination.getLigne(),
 				destination.getColonne());
 
-		this.calculeDijkstra();
-
 		while (caseCourante != carte.getCase(robot.getLigne(), robot.getColonne())) {
+			System.out.println("caseCourante : " + caseCourante);
 			Direction dir = caseCourante.getPrec();
 			directions.add(dir);
-			caseCourante = (CaseCarteDijkstra) carte.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(), dir);
+			caseCourante = (CaseCarteDijkstra) carte.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(),
+					Direction.getOppose(dir));
 		}
 
-		chemin = new Chemin(directions);
+		chemin = new Chemin(directions, poids);
 
 		return chemin;
 	}
@@ -54,9 +60,10 @@ public class Dijkstra {
 						caseCarte.getColonne(), dir);
 				if (!(voisin.isTraitee())) {
 					long poids = robot.tempsDeplacement(caseCarte, voisin, carte.getTailleCases());
-					voisin.setPoids(caseCarte.getPoids()+poids);
-					voisin.setPrec(dir);
-					
+					if (poids != Temps.tempsInfini) {
+						voisin.setPoids(caseCarte.getPoids() + poids);
+						voisin.setPrec(dir);
+					}
 				}
 			} catch (UnsupportedOperationException e) {
 

@@ -5,28 +5,28 @@ import java.awt.Color;
 import carte.Direction;
 import dijkstra.Dijkstra;
 import evenement.DeplacerRobot;
+import evenement.DeplacerRobotChemin;
 import gui.GUISimulator;
 import simulation.SimulationRobotsPompiers;
+import strategie.Chemin;
 
 public class TestSimulation {
 
 	public static void main(String[] args) {
-        // crée la fenêtre graphique dans laquelle dessiner
-        GUISimulator gui = new GUISimulator(800, 600, Color.WHITE);
-        SimulationRobotsPompiers simu = new SimulationRobotsPompiers(gui, "cartes/carteSujet.map");
-        Dijkstra dijk = new Dijkstra(simu.donSimu.carte, simu.donSimu.robots[0]);
-        System.out.println("Robot 0 : (" + simu.donSimu.robots[0].getLigne() + ", " + simu.donSimu.robots[0].getColonne() + ")");
-        dijk.calculeDijkstra();
-        for (int i=0; i<dijk.carte.getNbLignes(); i++)
-            for (int j=0; j<dijk.carte.getNbColonnes(); j++)
-	        	System.out.println(dijk.carte.getCase(i, j));
-        
-        System.out.println(dijk.plusCourtChemin(simu.donSimu.carte.getCase(0, 0)));
-        
-        simu.ajouteEvenement(new DeplacerRobot(1, simu, simu.donSimu.robots[0], Direction.NORD));
-        simu.ajouteEvenement(new DeplacerRobot(1, simu, simu.donSimu.robots[0], Direction.SUD));
-        simu.ajouteEvenement(new DeplacerRobot(1, simu, simu.donSimu.robots[0], Direction.NORD));
-        simu.ajouteEvenement(new DeplacerRobot(1, simu, simu.donSimu.robots[0], Direction.NORD));
-        simu.ajouteEvenement(new DeplacerRobot(1, simu, simu.donSimu.robots[0], Direction.NORD));
+		// crée la fenêtre graphique dans laquelle dessiner
+		GUISimulator gui = new GUISimulator(800, 600, Color.WHITE);
+		SimulationRobotsPompiers simu = new SimulationRobotsPompiers(gui, "cartes/carteSujet.map");
+
+		Dijkstra dijk = new Dijkstra(simu.donSimu.carte, simu.donSimu.robots[2]); dijk.calculeDijkstra();
+		Chemin chemin = dijk.plusCourtChemin(simu.donSimu.carte.getCase(0, 0));
+		simu.ajouteEvenement(new DeplacerRobotChemin(1, simu, simu.donSimu.robots[2], chemin));
+		
+		dijk = new Dijkstra(simu.donSimu.carte, simu.donSimu.robots[1]); dijk.calculeDijkstra();
+		chemin = dijk.plusCourtChemin(simu.donSimu.carte.getCase(0, 0));
+		simu.ajouteEvenement(new DeplacerRobotChemin(1, simu, simu.donSimu.robots[1], chemin));
+		
+		dijk = new Dijkstra(simu.donSimu.carte, simu.donSimu.robots[0]); dijk.calculeDijkstra();
+		chemin = dijk.plusCourtChemin(simu.donSimu.carte.getCase(0, 0));
+		simu.ajouteEvenement(new DeplacerRobotChemin(1, simu, simu.donSimu.robots[0], chemin));
 	}
 }

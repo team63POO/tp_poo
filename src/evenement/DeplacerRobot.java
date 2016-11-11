@@ -22,9 +22,10 @@ public class DeplacerRobot extends Evenement{
 	public void execute() {
 		CaseCarte destination, depart;
 		long tempsDeplacement;
+		Evenement finDeplacement;
 		
 		if (robot.getEtat()!=EtatRobot.INACTIF) {
-			simu.ajouteEvenement(new DeplacerRobot(this.getDate()+1, simu, robot, dir));
+			simu.ajouteEvenement(new DeplacerRobot(robot.getFinAction().getDate(), simu, robot, dir));
 			simu.supprimeEvenement(this);
 		}
 		else {
@@ -33,8 +34,10 @@ public class DeplacerRobot extends Evenement{
 			destination=simu.donSimu.carte.getVoisin(robot.getLigne(), robot.getColonne(), dir);
 		
 			tempsDeplacement = robot.tempsDeplacement(depart, destination, simu.donSimu.carte.getTailleCases());
-		
-			simu.ajouteEvenement(new FinDeplacementRobot(this.getDate() + tempsDeplacement, simu, robot, destination));
+			
+			finDeplacement = new FinDeplacementRobot(this.getDate() + tempsDeplacement, simu, robot, destination);
+			simu.ajouteEvenement(finDeplacement);
+			robot.setFinAction(finDeplacement);
 			simu.supprimeEvenement(this);
 		}
 	}
