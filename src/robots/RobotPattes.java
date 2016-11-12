@@ -1,12 +1,14 @@
 package robots;
 
+import carte.CaseCarte;
 import carte.NatureTerrain;
+import physique.Temps;
 
 public class RobotPattes extends Robot {
 	/** vitesse de déplacement par défaut du robot */
-	private static int vitesseBase=30;
+	private final static int vitesseBase=30;
 	/** débit d'extinction de l'incendie en L/s */
-	private static int debitExtinction=10;
+	private final static long debitArrosage=10;
 
 
 	public RobotPattes(int ligne, int colonne) {
@@ -24,5 +26,40 @@ public class RobotPattes extends Robot {
         default: 
         	return this.getVitesse();
         }
+	}
+
+
+	@Override
+	public long getTempsRemplissage() {
+		throw new UnsupportedOperationException("Un robot à pattes ne peut pas se remplir");
+	}
+
+	@Override
+	public float getDebitArrosage() {
+		return debitArrosage;
+	}
+
+	@Override
+	public long getTempsArrosage() {
+		return Temps.tempsInfini;
+	}
+
+	@Override
+	public void decrementeNiveauReservoir(int volumeDeverse) {
+	}
+
+	@Override
+	public void setReservoirPlein() {
+		throw new UnsupportedOperationException("Un robot à pattes ne peut pas se remplir");
+	}
+
+	@Override
+	public void setReservoirVide() {
+		throw new UnsupportedOperationException("Un robot à pattes ne peut pas se remplir");
+	}
+
+	@Override
+	public boolean conditionRemplissage(CaseCarte caseCarte) {
+		return caseCarte.isBerge();
 	}
 }

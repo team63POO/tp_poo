@@ -7,21 +7,19 @@ import strategie.Chemin;
 public class DeplacerRobotChemin extends Evenement {
 	private Robot robot;
 	private Chemin chemin;
-	private SimulationRobotsPompiers simu;
 
 	public DeplacerRobotChemin(long date, SimulationRobotsPompiers simu, Robot robot, Chemin chemin) {
 		super(date, simu);
 		this.robot = robot;
 		this.chemin = chemin;
-		this.simu = simu;
 	}
 
 	@Override
 	public void execute() {
-		for (int i = 0; i<chemin.directions.length; i++) {
+		for (int i = 0; i < chemin.directions.length; i++) {
 			simu.ajouteEvenement(new DeplacerRobot(this.getDate(), this.simu, robot, chemin.directions[i]));
 		}
-		
+
 		simu.supprimeEvenement(this);
 	}
 

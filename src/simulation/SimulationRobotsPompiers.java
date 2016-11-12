@@ -33,8 +33,9 @@ public class SimulationRobotsPompiers implements Simulable {
 	public SimulationRobotsPompiers(GUISimulator gui, String fichierCarte) {
 		this.fichierCarte = fichierCarte;
 		this.gui = gui;
-		gui.setSimulable(this); // association a la gui!
+		gui.setSimulable(this); // association a la gui
 		this.lireFichierDonnees();
+		this.donSimu.carte.decouverteBerges();
 		dateSimulation = 0;
 		draw();
 	}
@@ -112,6 +113,10 @@ public class SimulationRobotsPompiers implements Simulable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public long getDateSimulation() {
+		return dateSimulation;
 	}
 
 	@Override

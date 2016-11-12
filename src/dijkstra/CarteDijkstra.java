@@ -31,7 +31,7 @@ public class CarteDijkstra extends Carte {
 		for (int i = 0; i < this.getNbLignes(); i++) {
 			for (int j = 0; j < this.getNbColonnes(); j++) {
 				CaseCarteDijkstra caseCourante = (CaseCarteDijkstra) this.getCase(i, j);
-				
+
 				if (!(caseCourante.isTraitee()) && (caseCourante.getPoids() < poidsMin)) {
 					caseMin = caseCourante;
 					poidsMin = caseMin.getPoids();
@@ -43,13 +43,13 @@ public class CarteDijkstra extends Carte {
 
 		return caseMin;
 	}
-	
+
 	@Override
 	public String toString() {
 		String s = new String(super.toString());
 		for (int i = 0; i < this.getNbLignes(); i++) 
 			for (int j = 0; j < this.getNbColonnes(); j++)
-				s+=this.getCase(i, j).toString();
+				s+= "\n" + this.getCase(i, j).toString();
 		return s;
 	}
 }

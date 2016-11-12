@@ -41,7 +41,6 @@ public class Dijkstra {
 				destination.getColonne());
 
 		while (caseCourante != carte.getCase(robot.getLigne(), robot.getColonne())) {
-			System.out.println("caseCourante : " + caseCourante);
 			Direction dir = caseCourante.getPrec();
 			directions.add(dir);
 			caseCourante = (CaseCarteDijkstra) carte.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(),
@@ -55,7 +54,7 @@ public class Dijkstra {
 
 	private void majVoisins(CaseCarteDijkstra caseCarte) {
 		for (Direction dir : Direction.values()) {
-			try {
+			if (carte.existeVoisin(caseCarte.getLigne(), caseCarte.getColonne(), dir)) {
 				CaseCarteDijkstra voisin = (CaseCarteDijkstra) carte.getVoisin(caseCarte.getLigne(),
 						caseCarte.getColonne(), dir);
 				if (!(voisin.isTraitee())) {
@@ -65,8 +64,6 @@ public class Dijkstra {
 						voisin.setPrec(dir);
 					}
 				}
-			} catch (UnsupportedOperationException e) {
-
 			}
 		}
 	}

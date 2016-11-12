@@ -2,7 +2,6 @@ package strategie;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-
 import carte.Direction;
 
 public class Chemin {
@@ -19,6 +18,13 @@ public class Chemin {
 			directions[(sizeDirections - 1) - i] = itrDir.next();
 			i++;
 		}
+	}
+
+	public Chemin inverse() {
+		LinkedList<Direction> listeDirections = new LinkedList<Direction>();
+		for (int i = 0; i < directions.length; i++)
+			listeDirections.add(Direction.getOppose(directions[i]));
+		return new Chemin(listeDirections, this.getPoids());
 	}
 	
 	public long getPoids() {

@@ -9,13 +9,11 @@ import robots.EtatRobot;
 public class DeplacerRobot extends Evenement{
 	private Robot robot;
 	private Direction dir;
-	SimulationRobotsPompiers simu;
 
 	public DeplacerRobot(long date, SimulationRobotsPompiers simu, Robot robot, Direction dir) {
 		super(date, simu);
 		this.robot=robot;
 		this.dir=dir;
-		this.simu=simu;
 	}
 
 	@Override

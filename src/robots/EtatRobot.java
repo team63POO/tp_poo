@@ -1,5 +1,5 @@
 package robots;
 
 public enum EtatRobot {
-	INACTIF, DEPLACEMENT, ARROSAGE
+	INACTIF, DEPLACEMENT, ARROSAGE, REMPLISSAGE;
 }

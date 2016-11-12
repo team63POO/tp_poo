@@ -12,6 +12,7 @@ public class CaseCarteDijkstra extends CaseCarte {
 
 	public CaseCarteDijkstra(CaseCarte caseCarte) {
 		super(caseCarte.getLigne(), caseCarte.getColonne(), caseCarte.getNature());
+		this.setBerge(caseCarte.isBerge());
 		this.prec = null;
 		this.poids = poidsInfini;
 		this.traitee = false;
@@ -43,6 +44,6 @@ public class CaseCarteDijkstra extends CaseCarte {
 
 	@Override
 	public String toString() {
-		return new String(super.toString() + " prec = " + this.getPrec() + ", poids = " + this.getPoids());
+		return new String(super.toString() + " prec = " + this.getPrec() + ", poids = " + this.getPoids() + ", berge = " + this.isBerge());
 	}
 }

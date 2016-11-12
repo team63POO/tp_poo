@@ -2,11 +2,15 @@ package robots;
 
 import carte.CaseCarte;
 import carte.NatureTerrain;
+import dijkstra.Dijkstra;
 import evenement.Evenement;
 import physique.Temps;
+import simulation.SimulationRobotsPompiers;
+import strategie.Chemin;
 
 public abstract class Robot {
 	private int ligne, colonne, vitesse;
+	private long dateDebutArrosage;
 	private EtatRobot etat;
 	private Evenement finAction;
 
@@ -23,8 +27,8 @@ public abstract class Robot {
 	public long tempsDeplacement(CaseCarte depart, CaseCarte destination, int tailleCases) {
 		long temps = 0;
 		try {
-			temps += tailleCases / (2 * this.getVitesseTerrain(depart.getNature()) * 1000/3600);
-			temps += tailleCases / (2 * this.getVitesseTerrain(destination.getNature()) * 1000/3600);
+			temps += tailleCases / (2 * this.getVitesseTerrain(depart.getNature()) * 1000 / 3600);
+			temps += tailleCases / (2 * this.getVitesseTerrain(destination.getNature()) * 1000 / 3600);
 		} catch (ArithmeticException e) {
 			temps = Temps.tempsInfini;
 		}
@@ -34,6 +38,24 @@ public abstract class Robot {
 	public void deplacerCase(CaseCarte destination) {
 		this.setLigne(destination.getLigne());
 		this.setColonne(destination.getColonne());
+	}
+
+	public Chemin cheminRemplissage(SimulationRobotsPompiers simu) {
+		Dijkstra dijk = new Dijkstra(simu.donSimu.carte, this);
+		dijk.calculeDijkstra();
+		Chemin chemin, cheminMin = null;
+		for (int i = 0; i < simu.donSimu.carte.getNbLignes(); i++) {
+			for (int j = 0; j < simu.donSimu.carte.getNbColonnes(); j++) {
+				CaseCarte caseCourante = simu.donSimu.carte.getCase(i, j);
+				if (this.conditionRemplissage(caseCourante)) {
+					chemin = dijk.plusCourtChemin(caseCourante);
+					if (cheminMin == null || chemin.getPoids() < cheminMin.getPoids()) {
+						cheminMin = chemin;
+					}
+				}
+			}
+		}
+		return cheminMin;
 	}
 
 	public int getLigne() {
@@ -53,10 +75,20 @@ public abstract class Robot {
 	}
 
 	public Evenement getFinAction() {
-		if (finAction == null)
-			throw new UnsupportedOperationException("Pas d'évènement de fin d'action");
-		return finAction;
+		return this.finAction;
 	}
+
+	public long getDateDebutArrosage() {
+		return dateDebutArrosage;
+	}
+
+	public abstract long getTempsRemplissage();
+
+	public abstract float getDebitArrosage();
+
+	public abstract long getTempsArrosage();
+
+	public abstract boolean conditionRemplissage(CaseCarte caseCarte);
 
 	public void setLigne(int ligne) {
 		if (ligne < 0)
@@ -83,6 +115,18 @@ public abstract class Robot {
 	public void setFinAction(Evenement finAction) {
 		this.finAction = finAction;
 	}
+
+	public void setDateDebutArrosage(long dateDebutArrosage) {
+		if (dateDebutArrosage < 0)
+			throw new IllegalArgumentException("Argument incorrect : dateDebutArrosage = " + dateDebutArrosage);
+		this.dateDebutArrosage = dateDebutArrosage;
+	}
+
+	public abstract void decrementeNiveauReservoir(int volumeDeverse);
+
+	public abstract void setReservoirPlein();
+
+	public abstract void setReservoirVide();
 
 	@Override
 	public String toString() {
