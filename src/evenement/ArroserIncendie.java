@@ -22,9 +22,11 @@ public class ArroserIncendie extends Evenement {
 			simu.ajouteEvenement(new ArroserIncendie(robot.getFinAction().getDate(), simu, robot, incendie));
 			simu.supprimeEvenement(this);
 		} else {
-			robot.setEtat(EtatRobot.ARROSAGE);
-			robot.setDateDebutArrosage(simu.getDateSimulation());
-			incendie.ajouteRobot(robot, simu);
+			if (incendie.getIntensite()!=0) {
+				robot.setEtat(EtatRobot.ARROSAGE);
+				robot.setDateDebutArrosage(simu.getDateSimulation());
+				incendie.ajouteRobot(robot, simu);
+			}
 			simu.supprimeEvenement(this);
 		}
 	}

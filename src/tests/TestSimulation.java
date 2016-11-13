@@ -19,10 +19,18 @@ public class TestSimulation {
 		SimulationRobotsPompiers simu = new SimulationRobotsPompiers(gui, "cartes/carteSujet.map");
 
 		Robot robot = simu.donSimu.robots[0];
-		Incendie incendie = simu.donSimu.incendies[0];
+		Incendie incendie = simu.donSimu.incendies[4];
 		
 		Dijkstra dijk = new Dijkstra(simu.donSimu.carte, robot); dijk.calculeDijkstra();
 		Chemin chemin = dijk.plusCourtChemin(simu.donSimu.carte.getCase(incendie.getLigne(), incendie.getColonne()) );
+		simu.ajouteEvenement(new DeplacerRobotChemin(0, simu, robot, chemin));
+		simu.ajouteEvenement(new ArroserIncendie(20, simu, robot, incendie));
+		
+		robot = simu.donSimu.robots[1];
+		incendie = simu.donSimu.incendies[4];
+		
+		dijk = new Dijkstra(simu.donSimu.carte, robot); dijk.calculeDijkstra();
+		chemin = dijk.plusCourtChemin(simu.donSimu.carte.getCase(incendie.getLigne(), incendie.getColonne()) );
 		simu.ajouteEvenement(new DeplacerRobotChemin(0, simu, robot, chemin));
 		simu.ajouteEvenement(new ArroserIncendie(20, simu, robot, incendie));
 	}

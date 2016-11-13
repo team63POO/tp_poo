@@ -1,8 +1,11 @@
 package carte;
 
 public enum Direction {
-	NORD, SUD, EST, OUEST;
-	
+	NORD, 
+	SUD,
+	EST,
+	OUEST;
+
 	public static Direction getOppose(Direction dir) {
 		switch (dir) {
         case NORD:

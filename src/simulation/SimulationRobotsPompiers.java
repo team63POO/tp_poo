@@ -47,38 +47,20 @@ public class SimulationRobotsPompiers implements Simulable {
 
 		for (int lig = 0; lig < donSimu.carte.getNbLignes(); lig++) {
 			for (int col = 0; col < donSimu.carte.getNbColonnes(); col++) {
-				Color caseColor;
-				switch (donSimu.carte.getCase(lig, col).getNature()) {
-				case TERRAIN_LIBRE:
-					caseColor = Color.WHITE;
-					break;
-				case FORET:
-					caseColor = Color.GREEN;
-					break;
-				case ROCHE:
-					caseColor = Color.DARK_GRAY;
-					break;
-				case EAU:
-					caseColor = Color.BLUE;
-					break;
-				default:
-					caseColor = Color.WHITE;
-				}
-				gui.addGraphicalElement(new Rectangle(col * 30 + 50, lig * 30 + 50, defaultColor, caseColor, 30, 30));
+				gui.addGraphicalElement(new Rectangle(col * 30 + 50, lig * 30 + 50, defaultColor,
+						donSimu.carte.getCase(lig, col).getNature().getCouleur(), 30, 30));
 			}
 		}
 
 		for (Incendie incendie : donSimu.incendies) {
-			gui.addGraphicalElement(new Oval(incendie.getColonne() * 30 + 50, incendie.getLigne() * 30 + 50, Color.RED,
-					Color.RED, 18, 18));
-			;
+			if (incendie.getIntensite() != 0)
+				gui.addGraphicalElement(new Oval(incendie.getColonne() * 30 + 50, incendie.getLigne() * 30 + 50,
+						Color.RED, Color.RED, 18, 18));
 		}
 
 		for (Robot robot : donSimu.robots) {
 			gui.addGraphicalElement(new Rectangle(robot.getColonne() * 30 + 50, robot.getLigne() * 30 + 50, Color.BLACK,
 					Color.BLACK, 7, 7));
-			;
-			;
 		}
 	}
 
@@ -107,12 +89,15 @@ public class SimulationRobotsPompiers implements Simulable {
 		try {
 			donSimu = LecteurDonnees.creerDonnees(fichierCarte);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.afficheErreur("Fichier de carte introuvable");
 		} catch (DataFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			this.afficheErreur("Fichier de carte non valide");
 		}
+	}
+
+	private void afficheErreur(String nomErreur) {
+		gui.reset();
+		gui.addGraphicalElement(new Text(5, 5, defaultColor, nomErreur));
 	}
 
 	public long getDateSimulation() {
