@@ -11,8 +11,13 @@ public class RobotPattes extends Robot {
 	private final static long debitArrosage=10;
 
 
-	public RobotPattes(int ligne, int colonne) {
-		super(ligne, colonne, vitesseBase);
+	public RobotPattes(int lig, int col) {
+		super(lig, col, vitesseBase);
+	}
+
+
+	public RobotPattes(int lig, int col, int vitesse) {
+		super(lig, col, vitesse);
 	}
 
 

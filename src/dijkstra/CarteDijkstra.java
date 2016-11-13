@@ -1,32 +1,28 @@
 package dijkstra;
 
 import carte.Carte;
+import physique.Temps;
 
 public class CarteDijkstra extends Carte {
 
 	public CarteDijkstra(Carte carte) {
 		super(carte.getNbLignes(), carte.getNbColonnes(), carte.getTailleCases());
-		for (int i = 0; i < this.getNbLignes(); i++) {
-			for (int j = 0; j < this.getNbColonnes(); j++) {
+		for (int i = 0; i < this.getNbLignes(); i++)
+			for (int j = 0; j < this.getNbColonnes(); j++)
 				this.setCase(i, j, new CaseCarteDijkstra(carte.getCase(i, j)));
-			}
-		}
 	}
 
 	public void init(int lig, int col) {
-		for (int i = 0; i < this.getNbLignes(); i++) {
-			for (int j = 0; j < this.getNbColonnes(); j++) {
-				if (i == lig && j == col)
-					((CaseCarteDijkstra) this.getCase(i, j)).setPoids(0);
-				else
-					((CaseCarteDijkstra) this.getCase(i, j)).setPoids(CaseCarteDijkstra.poidsInfini);
-			}
-		}
+		for (int i = 0; i < this.getNbLignes(); i++)
+			for (int j = 0; j < this.getNbColonnes(); j++)
+				((CaseCarteDijkstra) this.getCase(i, j)).setPoids(CaseCarteDijkstra.poidsInfini);
+		
+		((CaseCarteDijkstra) this.getCase(lig, col)).setPoids(0);
 	}
 
 	public CaseCarteDijkstra minDijkstra() {
 		CaseCarteDijkstra caseMin = null;
-		long poidsMin = CaseCarteDijkstra.poidsInfini;
+		long poidsMin = Temps.tempsInfini;
 
 		for (int i = 0; i < this.getNbLignes(); i++) {
 			for (int j = 0; j < this.getNbColonnes(); j++) {
@@ -38,18 +34,10 @@ public class CarteDijkstra extends Carte {
 				}
 			}
 		}
+		
 		if (caseMin == null)
-			throw new UnsupportedOperationException("Pas de case de poids minimum");
+			throw new UnsupportedOperationException("Aucune case accessible");
 
 		return caseMin;
-	}
-
-	@Override
-	public String toString() {
-		String s = new String(super.toString());
-		for (int i = 0; i < this.getNbLignes(); i++) 
-			for (int j = 0; j < this.getNbColonnes(); j++)
-				s+= "\n" + this.getCase(i, j).toString();
-		return s;
 	}
 }

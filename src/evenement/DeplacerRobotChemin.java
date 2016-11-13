@@ -1,8 +1,8 @@
 package evenement;
 
+import carte.Chemin;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
-import strategie.Chemin;
 
 public class DeplacerRobotChemin extends Evenement {
 	private Robot robot;
@@ -16,8 +16,8 @@ public class DeplacerRobotChemin extends Evenement {
 
 	@Override
 	public void execute() {
-		for (int i = 0; i < chemin.directions.length; i++) {
-			simu.ajouteEvenement(new DeplacerRobot(this.getDate(), this.simu, robot, chemin.directions[i]));
+		for (int i = 0; i < chemin.getNombreDirections(); i++) {
+			simu.ajouteEvenement(new DeplacerRobot(this.getDate(), this.simu, robot, chemin.getDirection(i)));
 		}
 
 		simu.supprimeEvenement(this);

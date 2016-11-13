@@ -9,7 +9,7 @@ public class CaseCarte {
 		this.ligne = ligne;
 		this.colonne = colonne;
 		this.nature = nature;
-		this.berge = false;
+		this.setBerge(false);;
 	}
 
 	public int getLigne() {
@@ -40,7 +40,6 @@ public class CaseCarte {
 	@Override
 	public boolean equals(Object obj) {
 		CaseCarte caseCarte = (CaseCarte) obj;
-		return (this.getLigne() == caseCarte.getLigne() && this.getColonne() == caseCarte.getColonne()
-				&& this.getNature() == caseCarte.getNature());
+		return (this.getLigne() == caseCarte.getLigne() && this.getColonne() == caseCarte.getColonne());
 	}
 }

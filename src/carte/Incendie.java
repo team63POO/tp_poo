@@ -12,7 +12,6 @@ import physique.Temps;
 import robots.EtatRobot;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
-import strategie.Chemin;
 
 public class Incendie {
 	private int ligne, colonne, intensite;
@@ -163,6 +162,6 @@ public class Incendie {
 
 	@Override
 	public String toString() {
-		return new String("[" + ligne + "," + colonne + "] intensité : " + intensite);
+		return new String("(" + ligne + "," + colonne + ") intensité : " + intensite);
 	}
 }

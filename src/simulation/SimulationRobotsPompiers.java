@@ -9,7 +9,7 @@ import java.util.zip.DataFormatException;
 import carte.Incendie;
 import evenement.Evenement;
 import gui.GUISimulator;
-import gui.Oval;
+import gui.ImageElement;
 import gui.Rectangle;
 import gui.Simulable;
 import gui.Text;
@@ -21,14 +21,21 @@ public class SimulationRobotsPompiers implements Simulable {
 	private String fichierCarte;
 	/** L'interface graphique associée */
 	private GUISimulator gui;
-	/** La couleur de dessin */
-	private Color defaultColor = Color.BLACK;
 	/** Données de la simulation */
 	public DonneesSimulation donSimu;
 	/** Date actualisée par le simulateur */
 	private long dateSimulation;
 	/** Liste ordonnée des évènements */
 	private SortedSet<Evenement> events = new TreeSet<Evenement>();
+
+	/** La couleur du texte */
+	private Color couleurTexte = Color.BLACK;
+	/** La couleur de la grille */
+	private Color couleurGrille = Color.BLACK;
+	/** Facteur d'échelle des robots */
+	private final static double echelleRobot = 0.2;
+	private final static int ligPosCarte = 80, colPosCarte = 50;
+	private final static int tailleCase = 50;
 
 	public SimulationRobotsPompiers(GUISimulator gui, String fichierCarte) {
 		this.fichierCarte = fichierCarte;
@@ -41,26 +48,31 @@ public class SimulationRobotsPompiers implements Simulable {
 	}
 
 	private void draw() {
-		gui.reset(); // clear the window
-		gui.addGraphicalElement(new Text(120, 7, defaultColor, "carte : " + fichierCarte));
-		gui.addGraphicalElement(new Text(120, 22, defaultColor, "date : " + dateSimulation));
+		int nbColonnes = donSimu.carte.getNbColonnes(), nbLignes = donSimu.carte.getNbLignes();
 
-		for (int lig = 0; lig < donSimu.carte.getNbLignes(); lig++) {
-			for (int col = 0; col < donSimu.carte.getNbColonnes(); col++) {
-				gui.addGraphicalElement(new Rectangle(col * 30 + 50, lig * 30 + 50, defaultColor,
-						donSimu.carte.getCase(lig, col).getNature().getCouleur(), 30, 30));
+		gui.reset(); // clear the window
+		gui.addGraphicalElement(
+				new Text((nbColonnes / 2 * tailleCase + colPosCarte), 10, couleurTexte, "carte : " + fichierCarte));
+		gui.addGraphicalElement(
+				new Text((nbColonnes / 2 * tailleCase + colPosCarte), 30, couleurTexte, "date : " + dateSimulation));
+
+		for (int lig = 0; lig < nbLignes; lig++) {
+			for (int col = 0; col < nbColonnes; col++) {
+				Color couleurCase = donSimu.carte.getCase(lig, col).getNature().getCouleur();
+				gui.addGraphicalElement(new Rectangle(col * tailleCase + colPosCarte, lig * tailleCase + ligPosCarte,
+						couleurGrille, couleurCase, tailleCase, tailleCase));
 			}
 		}
 
 		for (Incendie incendie : donSimu.incendies) {
-			if (incendie.getIntensite() != 0)
-				gui.addGraphicalElement(new Oval(incendie.getColonne() * 30 + 50, incendie.getLigne() * 30 + 50,
-						Color.RED, Color.RED, 18, 18));
+			gui.addGraphicalElement(new ImageElement((int) ((incendie.getColonne() - 0.5) * tailleCase + colPosCarte),
+					(int) ((incendie.getLigne() - 0.5) * tailleCase + ligPosCarte), "resources/flamme.png", tailleCase,
+					tailleCase, gui));
 		}
 
 		for (Robot robot : donSimu.robots) {
-			gui.addGraphicalElement(new Rectangle(robot.getColonne() * 30 + 50, robot.getLigne() * 30 + 50, Color.BLACK,
-					Color.BLACK, 7, 7));
+			gui.addGraphicalElement(new Rectangle(robot.getColonne() * tailleCase + colPosCarte,
+					robot.getLigne() * tailleCase + ligPosCarte, Color.BLACK, Color.BLACK, (int) (tailleCase * echelleRobot), (int) (tailleCase * echelleRobot)));
 		}
 	}
 
@@ -97,7 +109,7 @@ public class SimulationRobotsPompiers implements Simulable {
 
 	private void afficheErreur(String nomErreur) {
 		gui.reset();
-		gui.addGraphicalElement(new Text(5, 5, defaultColor, nomErreur));
+		gui.addGraphicalElement(new Text(5, 5, Color.RED, nomErreur));
 	}
 
 	public long getDateSimulation() {

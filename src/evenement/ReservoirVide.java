@@ -1,10 +1,10 @@
 package evenement;
 
+import carte.Chemin;
 import carte.Incendie;
 import robots.EtatRobot;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
-import strategie.Chemin;
 
 public class ReservoirVide extends Evenement {
 	private Incendie incendie;

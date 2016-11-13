@@ -2,6 +2,7 @@ package tests;
 
 import java.awt.Color;
 
+import carte.Chemin;
 import carte.Incendie;
 import dijkstra.Dijkstra;
 import evenement.ArroserIncendie;
@@ -9,7 +10,6 @@ import evenement.DeplacerRobotChemin;
 import gui.GUISimulator;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
-import strategie.Chemin;
 
 public class TestSimulation {
 

@@ -15,11 +15,16 @@ public class RobotChenilles extends Robot {
 	/** niveau du réservoir en L */
 	private long niveauReservoir;
 	
-	public RobotChenilles(int ligne, int colonne) {
-		super(ligne, colonne, vitesseBase);
-		this.setReservoirPlein();;
+	public RobotChenilles(int lig, int col) {
+		super(lig, col, vitesseBase);
+		this.setReservoirPlein();
 	}
 	
+	public RobotChenilles(int lig, int col, int vitesse) {
+		super(lig, col, vitesse);
+		this.setReservoirPlein();
+	}
+
 	public long getNiveauReservoir() {
 		return niveauReservoir;
 	}

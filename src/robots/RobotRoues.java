@@ -15,8 +15,13 @@ public class RobotRoues extends Robot {
 	/** niveau du réservoir en L */
 	private long niveauReservoir;
 
-	public RobotRoues(int ligne, int colonne) {
-		super(ligne, colonne, vitesseBase);
+	public RobotRoues(int lig, int col) {
+		super(lig, col, vitesseBase);
+		this.setReservoirPlein();
+	}
+
+	public RobotRoues(int lig, int col, int vitesse) {
+		super(lig, col, vitesse);
 		this.setReservoirPlein();
 	}
 

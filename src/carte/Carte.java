@@ -8,9 +8,11 @@ public class Carte {
 		if (nbColonnes < 1)
 			throw new IllegalArgumentException("Argument incorrect : nbColonnes = " + nbColonnes);
 		this.nbColonnes = nbColonnes;
+
 		if (nbLignes < 1)
 			throw new IllegalArgumentException("Argument incorrect : nbLignes = " + nbLignes);
 		this.nbLignes = nbLignes;
+
 		if (tailleCases < 1)
 			throw new IllegalArgumentException("Argument incorrect : nbLignes = " + tailleCases);
 		this.tailleCases = tailleCases;
@@ -27,7 +29,7 @@ public class Carte {
 					if (caseCourante.getNature() == NatureTerrain.EAU) {
 						for (Direction dir : Direction.values()) {
 							if (this.existeVoisin(caseCourante.getLigne(), caseCourante.getColonne(), dir)) {
-								voisin=this.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(), dir);
+								voisin = this.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(), dir);
 								if (voisin.getNature() != NatureTerrain.EAU)
 									voisin.setBerge(true);
 							}
@@ -53,6 +55,9 @@ public class Carte {
 	}
 
 	public CaseCarte getCase(int lig, int col) {
+		if (0 > lig || lig >= this.getNbLignes() || 0 > col || col >= this.getNbColonnes())
+			throw new IllegalArgumentException("Limites de la carte atteintes");
+
 		return cases[lig][col];
 	}
 
@@ -74,13 +79,9 @@ public class Carte {
 			throw new IllegalArgumentException("Direction inconnue");
 		}
 
-		if (0 > lig || lig >= getNbLignes() || 0 > col || col >= getNbColonnes()) {
-			throw new UnsupportedOperationException("Limites de la carte atteintes");
-		}
-
-		return cases[lig][col];
+		return this.getCase(lig, col);
 	}
-	
+
 	public boolean existeVoisin(int lig, int col, Direction dir) {
 		switch (dir) {
 		case NORD:
@@ -99,9 +100,8 @@ public class Carte {
 			throw new IllegalArgumentException("Direction inconnue");
 		}
 
-		if (0 > lig || lig >= getNbLignes() || 0 > col || col >= getNbColonnes()) {
+		if (0 > lig || lig >= getNbLignes() || 0 > col || col >= getNbColonnes())
 			return false;
-		}
 
 		return true;
 	}
@@ -116,6 +116,10 @@ public class Carte {
 
 	@Override
 	public String toString() {
-		return new String(this.nbLignes + "x" + this.nbColonnes + " cases de taille " + this.tailleCases);
+		String s = new String(this.nbLignes + "*" + this.nbColonnes + " cases de taille " + this.tailleCases + "m de côté");
+		for (int i = 0; i < this.getNbLignes(); i++)
+			for (int j = 0; j < this.getNbColonnes(); j++)
+				s += "\n    " + this.getCase(i, j).toString();
+		return s;
 	}
 }

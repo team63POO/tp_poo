@@ -1,12 +1,12 @@
 package robots;
 
 import carte.CaseCarte;
+import carte.Chemin;
 import carte.NatureTerrain;
 import dijkstra.Dijkstra;
 import evenement.Evenement;
 import physique.Temps;
 import simulation.SimulationRobotsPompiers;
-import strategie.Chemin;
 
 public abstract class Robot {
 	private int ligne, colonne, vitesse;
@@ -102,7 +102,7 @@ public abstract class Robot {
 		this.colonne = colonne;
 	}
 
-	public void setVitesse(int vitesse) {
+	private void setVitesse(int vitesse) {
 		if (vitesse < 0)
 			throw new IllegalArgumentException("Argument incorrect : vitesse = " + vitesse);
 		this.vitesse = vitesse;

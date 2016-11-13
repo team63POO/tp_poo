@@ -15,8 +15,13 @@ public class Drone extends Robot {
 	/** niveau du réservoir en L */
 	private long niveauReservoir;
 
-	public Drone(int ligne, int colonne) {
-		super(ligne, colonne, vitesseBase);
+	public Drone(int lig, int col) {
+		super(lig, col, vitesseBase);
+		this.setReservoirPlein();
+	}
+
+	public Drone(int lig, int col, int vitesse) {
+		super(lig, col, vitesse);
 		this.setReservoirPlein();
 	}
 
