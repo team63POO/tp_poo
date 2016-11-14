@@ -59,10 +59,15 @@ public abstract class Robot {
 	}
 	
 	public void deplacerChemin(Chemin chemin, SimulationRobotsPompiers simu){
-		new DeplacerRobotChemin deplacement = DeplacerRobotChemin(simu.getDateSimulation,simu,this,chemin);
-		
+		new DeplacerRobotChemin deplacement = DeplacerRobotChemin(simu.getDateSimulation(),simu,this,chemin);	
 	}
 
+	public void arroser(SimulationRobotsPompiers simu,Incendie incendie){
+		new ArroserIncendie arrosage = ArroserIncendie(simu.getDateSimulation(),simu,this,incendie);
+		arrosage.execute();
+		new FinIncendie finIncendie = FinIncendie(simu.getDateSimulation(),simu,incendie);
+	}
+	
 	public int getLigne() {
 		return ligne;
 	}
