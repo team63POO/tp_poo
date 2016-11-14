@@ -65,7 +65,6 @@ public abstract class Robot {
 	public void arroser(SimulationRobotsPompiers simu,Incendie incendie){
 		new ArroserIncendie arrosage = ArroserIncendie(simu.getDateSimulation(),simu,this,incendie);
 		arrosage.execute();
-		new FinIncendie finIncendie = FinIncendie(simu.getDateSimulation(),simu,incendie);
 	}
 	
 	public int getLigne() {
