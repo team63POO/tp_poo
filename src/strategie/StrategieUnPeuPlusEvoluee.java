@@ -1,31 +1,37 @@
 package strategie;
 
 import carte.Carte;
+import carte.Chemin;
 import carte.Incendie;
-import robots.Robot;
+import dijkstra.Dijkstra;
 import physique.Temps;
+import robots.EtatRobot;
+import robots.Robot;
+import simulation.SimulationRobotsPompiers;
 
 public class StrategieUnPeuPlusEvoluee {
 
-	public StrategieElementaire(Incendie incendies[], Robot robots[], Carte carte){
-		new Dijkstra[] tableauDijk;
-		for ( int i=0 , i<robots.length , i++ ){
-			Dijkstra[i] = new Dijkstra(carte, robots[i]);
+	public StrategieUnPeuPlusEvoluee(SimulationRobotsPompiers simu , Incendie incendies[], Robot robots[]){
+		Carte carte = simu.donSimu.carte;
+		Dijkstra[] tableauDijk = new Dijkstra[robots.length];
+		for ( int i = 0 ; i < robots.length ; i++ ){
+			tableauDijk[i] = new Dijkstra(carte, robots[i]);
 		}
 		
-		int noRobot;
-		
+		int noRobot=0;
+		Chemin cheminSelect = null;
 		for(Incendie incendie : incendies) {
 			
 			long poids = Temps.tempsInfini;
-			for(int j=0, j<robots.length , j++) {
-				if (robots[noRobot].etat == INACTIF){//fct attene d'ordre a faire ds robots
-					new Chemin chemin = dijk.plusCourtChemin(carte.getCase(incendie.getLigne(), incendie.getColonne()));
-					if (chemin.poids < poids){
+			for(int j=0 ; j<robots.length ; j++) {
+				if (robots[noRobot].getEtat() == EtatRobot.INACTIF){//fct attene d'ordre a faire ds robots
+					Chemin chemin = tableauDijk[j].plusCourtChemin(carte.getCase(incendie.getLigne(), incendie.getColonne()));
+					if (chemin.getPoids() < poids){
 						noRobot = j;
+						cheminSelect = chemin;
 					}
 				}
-			robots[noRobot].deplacerChemin(simu,chemin);
+			robots[noRobot].deplacerChemin(cheminSelect,simu);
 			robots[noRobot].arroser(simu,incendie);
 			}
 		}

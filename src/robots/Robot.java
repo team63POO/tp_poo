@@ -2,11 +2,15 @@ package robots;
 
 import carte.CaseCarte;
 import carte.Chemin;
+import carte.Incendie;
 import carte.NatureTerrain;
 import dijkstra.Dijkstra;
+import evenement.ArroserIncendie;
+import evenement.DeplacerRobotChemin;
 import evenement.Evenement;
 import physique.Temps;
 import simulation.SimulationRobotsPompiers;
+
 
 public abstract class Robot {
 	private int ligne, colonne, vitesse;
@@ -59,11 +63,12 @@ public abstract class Robot {
 	}
 	
 	public void deplacerChemin(Chemin chemin, SimulationRobotsPompiers simu){
-		new DeplacerRobotChemin deplacement = DeplacerRobotChemin(simu.getDateSimulation(),simu,this,chemin);	
+		simu.ajouteEvenement( new DeplacerRobotChemin(simu.getDateSimulation(),simu,this,chemin));
 	}
 
 	public void arroser(SimulationRobotsPompiers simu,Incendie incendie){
-		new ArroserIncendie arrosage = ArroserIncendie(simu.getDateSimulation(),simu,this,incendie);
+		ArroserIncendie arrosage = new ArroserIncendie(simu.getDateSimulation(),simu,this,incendie);
+		simu.ajouteEvenement(arrosage);
 		arrosage.execute();
 	}
 	
