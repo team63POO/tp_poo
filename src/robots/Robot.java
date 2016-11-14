@@ -57,6 +57,11 @@ public abstract class Robot {
 		}
 		return cheminMin;
 	}
+	
+	public void deplacerChemin(Chemin chemin, SimulationRobotsPompiers simu){
+		new DeplacerRobotChemin deplacement = DeplacerRobotChemin(simu.getDateSimulation,simu,this,chemin);
+		
+	}
 
 	public int getLigne() {
 		return ligne;
