@@ -17,9 +17,9 @@ public class Remplissage extends Evenement {
 		long tempsRemplissage;
 		Evenement finRemplissage;
 
+		simu.supprimeEvenement(this);
 		if (robot.getEtat() != EtatRobot.INACTIF) {
 			simu.ajouteEvenement(new Remplissage(robot.getFinAction().getDate(), simu, robot));
-			simu.supprimeEvenement(this);
 		} else {
 			robot.setEtat(EtatRobot.REMPLISSAGE);
 
@@ -28,7 +28,6 @@ public class Remplissage extends Evenement {
 			finRemplissage = new FinRemplissage(this.getDate() + tempsRemplissage, simu, robot);
 			simu.ajouteEvenement(finRemplissage);
 			robot.setFinAction(finRemplissage);
-			simu.supprimeEvenement(this);
 		}
 	}
 

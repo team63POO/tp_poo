@@ -15,7 +15,7 @@ public class CarteDijkstra extends Carte {
 	public void init(int lig, int col) {
 		for (int i = 0; i < this.getNbLignes(); i++)
 			for (int j = 0; j < this.getNbColonnes(); j++)
-				((CaseCarteDijkstra) this.getCase(i, j)).setPoids(CaseCarteDijkstra.poidsInfini);
+				((CaseCarteDijkstra) this.getCase(i, j)).setPoids(Temps.tempsInfini);
 		
 		((CaseCarteDijkstra) this.getCase(lig, col)).setPoids(0);
 	}

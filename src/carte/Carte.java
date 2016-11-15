@@ -1,9 +1,24 @@
 package carte;
 
+/**
+ * Carte implementee par un tableau 2D de cases
+ * 
+ */
 public class Carte {
 	private CaseCarte cases[][];
 	private int tailleCases, nbLignes, nbColonnes;
 
+	/**
+	 * Unique constructeur de cette classe qui cree le tableau de cases sans le
+	 * remplir
+	 * 
+	 * @param nbLignes
+	 *            nombre de lignes du tableau
+	 * @param nbColonnes
+	 *            nombre de colonnes du tableau
+	 * @param tailleCases
+	 *            taille des cases en metres
+	 */
 	public Carte(int nbLignes, int nbColonnes, int tailleCases) {
 		if (nbColonnes < 1)
 			throw new IllegalArgumentException("Argument incorrect : nbColonnes = " + nbColonnes);
@@ -20,6 +35,11 @@ public class Carte {
 		this.cases = new CaseCarte[nbLignes][nbColonnes];
 	}
 
+	/**
+	 * Cette methode permet de marquer les berges (cases voisines d'une case
+	 * d'eau) dans le but de faciliter le remplissage des robots qui se
+	 * remplissent sur des berges
+	 */
 	public void decouverteBerges() {
 		try {
 			CaseCarte caseCourante, voisin;
@@ -61,6 +81,17 @@ public class Carte {
 		return cases[lig][col];
 	}
 
+	/**
+	 * Retourne la case voisine
+	 * 
+	 * @param lig
+	 *            ligne de la case
+	 * @param col
+	 *            colonne de la case
+	 * @param dir
+	 *            direction du voisin
+	 * @return case voisine
+	 */
 	public CaseCarte getVoisin(int lig, int col, Direction dir) {
 		switch (dir) {
 		case NORD:
@@ -82,6 +113,17 @@ public class Carte {
 		return this.getCase(lig, col);
 	}
 
+	/**
+	 * Retourne true si la case voisine existe false sinon
+	 * 
+	 * @param lig
+	 *            ligne de la case
+	 * @param col
+	 *            colonne de la case
+	 * @param dir
+	 *            direction du voisin
+	 * @return booleen
+	 */
 	public boolean existeVoisin(int lig, int col, Direction dir) {
 		switch (dir) {
 		case NORD:
@@ -116,7 +158,8 @@ public class Carte {
 
 	@Override
 	public String toString() {
-		String s = new String(this.nbLignes + "*" + this.nbColonnes + " cases de taille " + this.tailleCases + "m de côté");
+		String s = new String(
+				this.nbLignes + "*" + this.nbColonnes + " cases de taille " + this.tailleCases + "m de côté");
 		for (int i = 0; i < this.getNbLignes(); i++)
 			for (int j = 0; j < this.getNbColonnes(); j++)
 				s += "\n    " + this.getCase(i, j).toString();

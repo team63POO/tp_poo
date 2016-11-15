@@ -1,16 +1,7 @@
 package strategie;
 
-import carte.Carte;
-import carte.Chemin;
-import carte.Incendie;
-import dijkstra.Dijkstra;
-import physique.Temps;
-import robots.EtatRobot;
-import robots.Robot;
-import simulation.SimulationRobotsPompiers;
-
 public class StrategieUnPeuPlusEvoluee {
-
+/*
 	public StrategieUnPeuPlusEvoluee(SimulationRobotsPompiers simu , Incendie incendies[], Robot robots[]){
 		Carte carte = simu.donSimu.carte;
 		Dijkstra[] tableauDijk = new Dijkstra[robots.length];
@@ -35,5 +26,5 @@ public class StrategieUnPeuPlusEvoluee {
 			robots[noRobot].arroser(simu,incendie);
 			}
 		}
-	}
+	}*/
 }

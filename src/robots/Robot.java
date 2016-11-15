@@ -2,15 +2,18 @@ package robots;
 
 import carte.CaseCarte;
 import carte.Chemin;
-import carte.Incendie;
 import carte.NatureTerrain;
 import dijkstra.Dijkstra;
-import evenement.ArroserIncendie;
-import evenement.DeplacerRobotChemin;
 import evenement.Evenement;
 import physique.Temps;
+import physique.Vitesse;
 import simulation.SimulationRobotsPompiers;
 
+/**
+ * Classe abstraite robot contenant la position, la vitesse de base du robot et
+ * son état
+ *
+ */
 
 public abstract class Robot {
 	private int ligne, colonne, vitesse;
@@ -22,28 +25,51 @@ public abstract class Robot {
 		this.setLigne(ligne);
 		this.setColonne(colonne);
 		this.setVitesse(vitesse);
-		this.setEtat(EtatRobot.INACTIF);
+		this.setEtat(EtatRobot.ATTENTE_ORDRES);
 		this.setFinAction(null);
 	}
 
+	/**
+	 * Retourne la vitesse du robot en fonction due la nature du terrain
+	 * 
+	 * @param terrain
+	 *            nature du terrain
+	 * @return vitesse du robot
+	 */
 	public abstract int getVitesseTerrain(NatureTerrain terrain);
 
 	public long tempsDeplacement(CaseCarte depart, CaseCarte destination, int tailleCases) {
 		long temps = 0;
-		try {
-			temps += tailleCases / (2 * this.getVitesseTerrain(depart.getNature()) * 1000 / 3600);
-			temps += tailleCases / (2 * this.getVitesseTerrain(destination.getNature()) * 1000 / 3600);
-		} catch (ArithmeticException e) {
-			temps = Temps.tempsInfini;
-		}
+
+		double vitesseCase1 = (double) this.getVitesseTerrain(depart.getNature());
+		double vitesseCase2 = (double) this.getVitesseTerrain(destination.getNature());
+		if (vitesseCase1 == 0 || vitesseCase2 == 0)
+			return Temps.tempsInfini;
+
+		temps += (long) ((double) tailleCases / ((double) 2 * Vitesse.kmphVersMps(vitesseCase1)));
+		temps += (long) ((double) tailleCases / ((double) 2 * Vitesse.kmphVersMps(vitesseCase2)));
+
 		return temps;
 	}
 
+	/**
+	 * Methode modifiant la position du robot pour le plcer sur la case
+	 * destination
+	 * 
+	 * @param destination
+	 */
 	public void deplacerCase(CaseCarte destination) {
 		this.setLigne(destination.getLigne());
 		this.setColonne(destination.getColonne());
 	}
 
+	/**
+	 * Retourne le chemin le plus court pour aller se remplir
+	 * 
+	 * @param simu
+	 *            simulation
+	 * @return chemin de remplissage
+	 */
 	public Chemin cheminRemplissage(SimulationRobotsPompiers simu) {
 		Dijkstra dijk = new Dijkstra(simu.donSimu.carte, this);
 		dijk.calculeDijkstra();
@@ -61,17 +87,7 @@ public abstract class Robot {
 		}
 		return cheminMin;
 	}
-	
-	public void deplacerChemin(Chemin chemin, SimulationRobotsPompiers simu){
-		simu.ajouteEvenement( new DeplacerRobotChemin(simu.getDateSimulation(),simu,this,chemin));
-	}
 
-	public void arroser(SimulationRobotsPompiers simu,Incendie incendie){
-		ArroserIncendie arrosage = new ArroserIncendie(simu.getDateSimulation(),simu,this,incendie);
-		simu.ajouteEvenement(arrosage);
-		arrosage.execute();
-	}
-	
 	public int getLigne() {
 		return ligne;
 	}
@@ -98,10 +114,19 @@ public abstract class Robot {
 
 	public abstract long getTempsRemplissage();
 
+	public abstract boolean isReservoirPlein();
+
 	public abstract float getDebitArrosage();
 
 	public abstract long getTempsArrosage();
 
+	/**
+	 * Retourne un booleen representant le fait que le robot se remplisse sur ou
+	 * a cote d'une case d'eau
+	 * 
+	 * @param caseCarte
+	 * @return true si le robot peut se remplir sur caseCarte false sinon
+	 */
 	public abstract boolean conditionRemplissage(CaseCarte caseCarte);
 
 	public void setLigne(int ligne) {
@@ -142,8 +167,10 @@ public abstract class Robot {
 
 	public abstract void setReservoirVide();
 
+	public abstract String getFichierImage();
+
 	@Override
 	public String toString() {
-		return new String("[" + ligne + "," + colonne + "] vitesse : " + vitesse);
+		return new String("[" + ligne + "," + colonne + "] vitesse : " + vitesse + ", etat = " + this.getEtat());
 	}
 }

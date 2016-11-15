@@ -2,6 +2,10 @@ package carte;
 
 import java.util.LinkedList;
 
+/**
+ * Implementation d'un chemin par un tableau de directions et un poids
+ * correspondant à la duree de parcours du chemin
+ */
 public class Chemin {
 	private Direction[] directions;
 	private int nombreDirections;
@@ -13,6 +17,11 @@ public class Chemin {
 		directions = listeDirections.toArray(new Direction[this.getNombreDirections()]);
 	}
 
+	/**
+	 * Retourne le chemin inverse
+	 * 
+	 * @return chemin inverse
+	 */
 	public Chemin inverse() {
 		LinkedList<Direction> listeDirections = new LinkedList<Direction>();
 		for (int i = this.getNombreDirections() - 1; i >= 0; i--)
@@ -37,6 +46,7 @@ public class Chemin {
 		String s = new String("directions :");
 		for (int i = 0; i < directions.length; i++)
 			s += " " + directions[i].toString();
+		s += " , poids = " + this.getPoids();
 		return s;
 	}
 }

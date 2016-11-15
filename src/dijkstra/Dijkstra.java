@@ -1,6 +1,8 @@
 package dijkstra;
 
 import carte.Direction;
+import physique.Temps;
+
 import java.util.LinkedList;
 import carte.Carte;
 import carte.CaseCarte;
@@ -25,7 +27,7 @@ public class Dijkstra {
 				caseCarte.setTraitee(true);
 				this.majVoisins(caseCarte);
 			} catch (UnsupportedOperationException e) {
-
+				
 			}
 		}
 	}
@@ -35,13 +37,14 @@ public class Dijkstra {
 		CaseCarteDijkstra caseCourante = (CaseCarteDijkstra) carte.getCase(destination.getLigne(),
 				destination.getColonne());
 		long poids = caseCourante.getPoids();
+		if (poids >= Temps.tempsInfini)
+			throw new UnsupportedOperationException("Case inaccessible : pas de plus court chemin");
 		LinkedList<Direction> directions = new LinkedList<Direction>();
 
 		while (caseCourante != carte.getCase(robot.getLigne(), robot.getColonne())) {
 			Direction dir = Direction.getOppose(caseCourante.getPrec());
 			directions.add(dir);
 			caseCourante = (CaseCarteDijkstra) carte.getVoisin(caseCourante.getLigne(), caseCourante.getColonne(), dir);
-			poids += caseCourante.getPoids();
 		}
 
 		chemin = (new Chemin(directions, poids)).inverse();
@@ -56,7 +59,7 @@ public class Dijkstra {
 				CaseCarteDijkstra voisin = (CaseCarteDijkstra) carte.getVoisin(lig, col, dir);
 				if (!(voisin.isTraitee())) {
 					long poids = robot.tempsDeplacement(caseCarte, voisin, carte.getTailleCases());
-					if (poids < voisin.getPoids()) {
+					if ((poids + caseCarte.getPoids()) < voisin.getPoids()) {
 						voisin.setPoids(caseCarte.getPoids() + poids);
 						voisin.setPrec(dir);
 					}

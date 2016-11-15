@@ -18,8 +18,15 @@ public class ReservoirVide extends Evenement {
 
 	@Override
 	public void execute() {
+		simu.supprimeEvenement(this);
+		
 		long date = this.getDate();
-		incendie.retireRobot(robot, simu);
+		try {
+			incendie.retireRobot(robot, simu);
+		}
+		catch (UnsupportedOperationException e) {
+			
+		}
 		robot.setReservoirVide();
 		robot.setEtat(EtatRobot.INACTIF);
 		
@@ -31,8 +38,6 @@ public class ReservoirVide extends Evenement {
 		simu.ajouteEvenement(new DeplacerRobotChemin(date, simu, robot, chemin.inverse()));
 		date += chemin.getPoids();
 		simu.ajouteEvenement(new ArroserIncendie(date, simu, robot, incendie));
-		
-		simu.supprimeEvenement(this);
 	}
 
 	@Override

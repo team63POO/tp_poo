@@ -16,11 +16,10 @@ public class DeplacerRobotChemin extends Evenement {
 
 	@Override
 	public void execute() {
+		simu.supprimeEvenement(this);
 		for (int i = 0; i < chemin.getNombreDirections(); i++) {
 			simu.ajouteEvenement(new DeplacerRobot(this.getDate(), this.simu, robot, chemin.getDirection(i)));
 		}
-
-		simu.supprimeEvenement(this);
 	}
 
 	@Override

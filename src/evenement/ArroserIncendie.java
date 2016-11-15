@@ -17,17 +17,18 @@ public class ArroserIncendie extends Evenement {
 
 	@Override
 	public void execute() {
-
-		if (robot.getEtat() != EtatRobot.INACTIF) {
+		simu.supprimeEvenement(this);
+		if (robot.getEtat() != EtatRobot.INACTIF)
 			simu.ajouteEvenement(new ArroserIncendie(robot.getFinAction().getDate(), simu, robot, incendie));
-			simu.supprimeEvenement(this);
-		} else {
-			if (incendie.getIntensite()!=0) {
+		else {
+			if (incendie.getIntensite() != 0) {
 				robot.setEtat(EtatRobot.ARROSAGE);
 				robot.setDateDebutArrosage(simu.getDateSimulation());
 				incendie.ajouteRobot(robot, simu);
+			} else {
+				robot.setEtat(EtatRobot.ATTENTE_ORDRES);
+				simu.strat.donnerOrdresRobots(robot);
 			}
-			simu.supprimeEvenement(this);
 		}
 	}
 

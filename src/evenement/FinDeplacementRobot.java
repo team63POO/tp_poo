@@ -17,9 +17,9 @@ public class FinDeplacementRobot extends Evenement{
 
 	@Override
 	public void execute() {
+		simu.supprimeEvenement(this);
 		robot.deplacerCase(destination);
 		robot.setEtat(EtatRobot.INACTIF);
-		simu.supprimeEvenement(this);
 	}
 	
 	@Override

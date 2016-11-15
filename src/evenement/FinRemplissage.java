@@ -14,9 +14,9 @@ public class FinRemplissage extends Evenement{
 
 	@Override
 	public void execute() {
+		simu.supprimeEvenement(this);
 		robot.setReservoirPlein();
 		robot.setEtat(EtatRobot.INACTIF);
-		simu.supprimeEvenement(this);
 	}
 	
 	@Override

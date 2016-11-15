@@ -1,5 +1,9 @@
 package robots;
 
+/**
+ * Type enum representant les etats possibles d'un robot
+ *
+ */
 public enum EtatRobot {
-	INACTIF, DEPLACEMENT, ARROSAGE, REMPLISSAGE;
+	ATTENTE_ORDRES, INACTIF, DEPLACEMENT, ARROSAGE, REMPLISSAGE;
 }

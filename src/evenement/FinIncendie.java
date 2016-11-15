@@ -13,8 +13,8 @@ public class FinIncendie extends Evenement {
 
 	@Override
 	public void execute() {
-		incendie.finIncendie(simu);
 		simu.supprimeEvenement(this);
+		incendie.finIncendie(simu);
 	}
 
 	@Override

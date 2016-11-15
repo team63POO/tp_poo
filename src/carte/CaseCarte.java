@@ -1,5 +1,9 @@
 package carte;
 
+/**
+ * Case de la carte qui stocke la nature du terrain qu'elle represente ainsi
+ * qu'un booléen indiquant si c'est une berge ou non
+ */
 public class CaseCarte {
 	private int ligne, colonne;
 	private NatureTerrain nature;
@@ -9,7 +13,7 @@ public class CaseCarte {
 		this.ligne = ligne;
 		this.colonne = colonne;
 		this.nature = nature;
-		this.setBerge(false);;
+		this.setBerge(false);
 	}
 
 	public int getLigne() {

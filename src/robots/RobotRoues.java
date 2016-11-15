@@ -3,6 +3,10 @@ package robots;
 import carte.CaseCarte;
 import carte.NatureTerrain;
 
+/**
+ * Classe robot a roues
+ * 
+ */
 public class RobotRoues extends Robot {
 	/** vitesse de déplacement par défaut du robot */
 	private final static int vitesseBase = 80;
@@ -14,6 +18,8 @@ public class RobotRoues extends Robot {
 	private final static float debitArrosage = 100 / 5;
 	/** niveau du réservoir en L */
 	private long niveauReservoir;
+	/** chemin du fichier image representant le robot */
+	private final static String fichierImage = "resources/images/robots/robot_roues.png";
 
 	public RobotRoues(int lig, int col) {
 		super(lig, col, vitesseBase);
@@ -55,7 +61,14 @@ public class RobotRoues extends Robot {
 
 	@Override
 	public long getTempsArrosage() {
-		return (long) (this.getNiveauReservoir()/this.getDebitArrosage());
+		return (long) (this.getNiveauReservoir() / this.getDebitArrosage());
+	}
+
+	@Override
+	public boolean isReservoirPlein() {
+		if (this.getNiveauReservoir() == RobotRoues.capaciteReservoir)
+			return true;
+		return false;
 	}
 
 	@Override
@@ -76,5 +89,15 @@ public class RobotRoues extends Robot {
 	@Override
 	public boolean conditionRemplissage(CaseCarte caseCarte) {
 		return caseCarte.isBerge();
+	}
+
+	@Override
+	public String getFichierImage() {
+		return RobotRoues.fichierImage;
+	}
+
+	@Override
+	public String toString() {
+		return new String(super.toString() + ", type = robot à roues");
 	}
 }

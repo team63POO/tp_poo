@@ -15,47 +15,82 @@ import gui.Simulable;
 import gui.Text;
 import io.LecteurDonnees;
 import robots.Robot;
+import strategie.Strategie;
 
+/**
+ * Classe simulation qui implemente le gestionnaire d'evenements discrets
+ *
+ */
 public class SimulationRobotsPompiers implements Simulable {
 	/** Chemin du fichier de carte */
 	private String fichierCarte;
 	/** L'interface graphique associée */
 	private GUISimulator gui;
-	/** Données de la simulation */
+	/** Donnees de la simulation */
 	public DonneesSimulation donSimu;
-	/** Date actualisée par le simulateur */
+	/** Strategie */
+	public Strategie strat;
+	/** Date actualisee par le simulateur */
 	private long dateSimulation;
-	/** Liste ordonnée des évènements */
+	/** Liste ordonnee des évènements */
 	private SortedSet<Evenement> events = new TreeSet<Evenement>();
 
 	/** La couleur du texte */
 	private Color couleurTexte = Color.BLACK;
 	/** La couleur de la grille */
 	private Color couleurGrille = Color.BLACK;
-	/** Facteur d'échelle des robots */
-	private final static double echelleRobot = 0.2;
+	/** Facteur d'echelle des robots */
+	private final static double echelleRobot = 0.8;
+	/** Position de la carte */
 	private final static int ligPosCarte = 80, colPosCarte = 50;
-	private final static int tailleCase = 50;
+	/**
+	 * Taille des cases dans la fenetre graphique, a modifier si la carte est
+	 * grande et depasse de la fenetre
+	 */
+	private final static int tailleCase = 20;
 
 	public SimulationRobotsPompiers(GUISimulator gui, String fichierCarte) {
 		this.fichierCarte = fichierCarte;
 		this.gui = gui;
+		this.strat = null;
 		gui.setSimulable(this); // association a la gui
-		this.lireFichierDonnees();
-		this.donSimu.carte.decouverteBerges();
+
+		this.lireFichierDonnees(); // lecture des donnees de la simulation dans
+									// le fichier
+		this.donSimu.carte.decouverteBerges(); // marquage des cases qui sont
+												// des berges
 		dateSimulation = 0;
 		draw();
+	}
+
+	public SimulationRobotsPompiers(GUISimulator gui, String fichierCarte, Strategie strat) {
+		this(gui, fichierCarte);
+		this.strat = strat;
+		strat.init(this);
+		strat.donnerOrdresRobots();
+	}
+
+	@Override
+	public void restart() {
+		this.lireFichierDonnees();
+		this.donSimu.carte.decouverteBerges(); // marquage des cases qui sont
+												// des berges
+		dateSimulation = 0;
+		draw();
+		strat.init(this);
+		strat.donnerOrdresRobots();
 	}
 
 	private void draw() {
 		int nbColonnes = donSimu.carte.getNbColonnes(), nbLignes = donSimu.carte.getNbLignes();
 
-		gui.reset(); // clear the window
+		gui.reset(); // nettoyage de la fenetre
 		gui.addGraphicalElement(
 				new Text((nbColonnes / 2 * tailleCase + colPosCarte), 10, couleurTexte, "carte : " + fichierCarte));
 		gui.addGraphicalElement(
 				new Text((nbColonnes / 2 * tailleCase + colPosCarte), 30, couleurTexte, "date : " + dateSimulation));
 
+		// affiichage de la carte
 		for (int lig = 0; lig < nbLignes; lig++) {
 			for (int col = 0; col < nbColonnes; col++) {
 				Color couleurCase = donSimu.carte.getCase(lig, col).getNature().getCouleur();
@@ -64,15 +99,21 @@ public class SimulationRobotsPompiers implements Simulable {
 			}
 		}
 
+		// affichage des incendies d'intensite non nulle
 		for (Incendie incendie : donSimu.incendies) {
-			gui.addGraphicalElement(new ImageElement((int) ((incendie.getColonne() - 0.5) * tailleCase + colPosCarte),
-					(int) ((incendie.getLigne() - 0.5) * tailleCase + ligPosCarte), "resources/flamme.png", tailleCase,
-					tailleCase, gui));
+			if (incendie.getIntensite() != 0)
+				gui.addGraphicalElement(
+						new ImageElement((int) ((incendie.getColonne() - 0.5) * tailleCase + colPosCarte),
+								(int) ((incendie.getLigne() - 0.5) * tailleCase + ligPosCarte),
+								"resources/images/flamme.png", tailleCase, tailleCase, gui));
 		}
 
+		// affichage des robots
 		for (Robot robot : donSimu.robots) {
-			gui.addGraphicalElement(new Rectangle(robot.getColonne() * tailleCase + colPosCarte,
-					robot.getLigne() * tailleCase + ligPosCarte, Color.BLACK, Color.BLACK, (int) (tailleCase * echelleRobot), (int) (tailleCase * echelleRobot)));
+			gui.addGraphicalElement(new ImageElement(
+					(int) ((robot.getColonne() - echelleRobot / 2) * tailleCase + colPosCarte),
+					(int) ((robot.getLigne() - echelleRobot / 2) * tailleCase + ligPosCarte), robot.getFichierImage(),
+					(int) (tailleCase * echelleRobot), (int) (tailleCase * echelleRobot), gui));
 		}
 	}
 
@@ -85,6 +126,10 @@ public class SimulationRobotsPompiers implements Simulable {
 			throw new IllegalArgumentException("erreur suppression evenement");
 	}
 
+	/**
+	 * incremente la date de la simulation actuelle vers celle de l'evenement le
+	 * plus proche
+	 */
 	private void incrementeDate() {
 		if (this.events.size() == 0)
 			throw new UnsupportedOperationException("Plus d'évènements");
@@ -112,6 +157,10 @@ public class SimulationRobotsPompiers implements Simulable {
 		gui.addGraphicalElement(new Text(5, 5, Color.RED, nomErreur));
 	}
 
+	/**
+	 * 
+	 * @return date actuelle de la simulation
+	 */
 	public long getDateSimulation() {
 		return dateSimulation;
 	}
@@ -130,12 +179,5 @@ public class SimulationRobotsPompiers implements Simulable {
 			event.execute();
 			draw();
 		}
-	}
-
-	@Override
-	public void restart() {
-		this.lireFichierDonnees();
-		dateSimulation = 0;
-		draw();
 	}
 }

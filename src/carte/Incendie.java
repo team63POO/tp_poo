@@ -3,16 +3,19 @@ package carte;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import evenement.DeplacerRobotChemin;
 import evenement.Evenement;
 import evenement.FinIncendie;
-import evenement.Remplissage;
 import evenement.ReservoirVide;
 import physique.Temps;
 import robots.EtatRobot;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
 
+/**
+ * Incendie stockant une inetnsite egale au volume en Litres d'eau necessaire a
+ * son extinction, une position (ligne et colonne ainsi qu'un evenement de fin
+ * d'incendie
+ */
 public class Incendie {
 	private int ligne, colonne, intensite;
 	private LinkedList<Robot> intervenants;
@@ -29,7 +32,7 @@ public class Incendie {
 		if (intervenants == null)
 			intervenants = new LinkedList<Robot>();
 		intervenants.add(robot);
-		
+
 		long dateFinIncendie, temps = Temps.tempsInfini;
 		Robot robotMin = null;
 		int volumeTotalDeverse = 0;
@@ -61,26 +64,23 @@ public class Incendie {
 		if (debitTotal != 0) {
 			dateFinIncendie = dateSimu + (long) (this.getIntensite() / debitTotal);
 			FinIncendie = new FinIncendie(dateFinIncendie, simu, this);
-			simu.ajouteEvenement(FinIncendie);	
-		}
-		else {
+			simu.ajouteEvenement(FinIncendie);
+		} else {
 			dateFinIncendie = Temps.tempsInfini;
 		}
 
-		
 		if (dateFinIncendie > (dateSimu + temps)) {
 			simu.ajouteEvenement(new ReservoirVide(dateSimu + temps, simu, this, robotMin));
-		} 	
-		System.out.println("(dateSimu - robot.getDateDebutArrosage()) : " + (dateSimu - robot.getDateDebutArrosage()) 
-				+ ", debit : " + robot.getDebitArrosage()
-				+ ", VolumeTotalDeverse : " + volumeTotalDeverse 
-				+ ", dateSimu : " + dateSimu 
-				+ ", dateDebutArrosage : " + robot.getDateDebutArrosage() 
-				+ "\n");
+		}
+		System.out.println("(dateSimu - robot.getDateDebutArrosage()) : " + (dateSimu - robot.getDateDebutArrosage())
+				+ ", debit : " + robot.getDebitArrosage() + ", VolumeTotalDeverse : " + volumeTotalDeverse
+				+ ", dateSimu : " + dateSimu + ", dateDebutArrosage : " + robot.getDateDebutArrosage() + "\n");
 		System.out.print("intensiteIncendie : " + this.getIntensite() + "\n");
 	}
 
 	public void retireRobot(Robot robot, SimulationRobotsPompiers simu) {
+		if (intervenants == null)
+			throw new UnsupportedOperationException("Pas d'intervenants à retirer");
 		intervenants.remove(robot);
 
 		long dateSimu = simu.getDateSimulation();
@@ -114,15 +114,14 @@ public class Incendie {
 		if (debitTotal != 0) {
 			dateFinIncendie = dateSimu + (long) (this.getIntensite() / debitTotal);
 			FinIncendie = new FinIncendie(dateFinIncendie, simu, this);
-			simu.ajouteEvenement(FinIncendie);	
+			simu.ajouteEvenement(FinIncendie);
+		} else {
+			dateFinIncendie = simu.getDateSimulation() + Temps.tempsInfini;
 		}
-		else {
-			dateFinIncendie = Temps.tempsInfini;
-		}
-		
+
 		if (dateFinIncendie > (dateSimu + temps)) {
 			simu.ajouteEvenement(new ReservoirVide(dateSimu + temps, simu, this, robotMin));
-		} 
+		}
 	}
 
 	public void finIncendie(SimulationRobotsPompiers simu) {
@@ -134,12 +133,10 @@ public class Incendie {
 			float debit = robot.getDebitArrosage();
 			int volumeDeverse = (int) ((dateSimu - robot.getDateDebutArrosage()) * debit);
 			robot.decrementeNiveauReservoir(volumeDeverse);
-			robot.setEtat(EtatRobot.INACTIF);
-			Chemin chemin = robot.cheminRemplissage(simu);		
-			simu.ajouteEvenement(new DeplacerRobotChemin(dateSimu, simu, robot, chemin));
-			simu.ajouteEvenement(new Remplissage(dateSimu + chemin.getPoids(), simu, robot));
+			robot.setEtat(EtatRobot.ATTENTE_ORDRES);
 		}
 		intervenants = null;
+		simu.strat.donnerOrdresRobots();
 	}
 
 	public int getIntensite() {
@@ -154,9 +151,15 @@ public class Incendie {
 		return colonne;
 	}
 
+	public int getNbIntervenants() {
+		if (intervenants == null)
+			return 0;
+		return intervenants.size();
+	}
+
 	public void setIntensite(int intensite) {
 		if (intensite < 0)
-			throw new IllegalArgumentException("Argument incorrect : intensite = " + intensite);
+			this.intensite = 0;
 		this.intensite = intensite;
 	}
 
