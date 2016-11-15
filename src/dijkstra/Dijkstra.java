@@ -9,7 +9,12 @@ import carte.CaseCarte;
 import carte.Chemin;
 import robots.Robot;
 
+/**
+ * Implementation de l'algorithme de Dijkstra
+ *
+ */
 public class Dijkstra {
+	/** carte ponderee */
 	public CarteDijkstra carte;
 	private Robot robot;
 
@@ -18,6 +23,10 @@ public class Dijkstra {
 		this.robot = robot;
 	}
 
+	/**
+	 * Applique l'algorithme de Dijkstra a carte afin de calculer toutes les
+	 * ponderations ainsi que le precedent de chaque case
+	 */
 	public void calculeDijkstra() {
 		carte.init(robot.getLigne(), robot.getColonne());
 
@@ -27,11 +36,18 @@ public class Dijkstra {
 				caseCarte.setTraitee(true);
 				this.majVoisins(caseCarte);
 			} catch (UnsupportedOperationException e) {
-				
+
 			}
 		}
 	}
 
+	/**
+	 * Instancie un objet chemin contenant le plus court chemin vers destination
+	 * Leve une exception si la case n'est pas accessible
+	 * 
+	 * @param destination
+	 * @return plus court chemin vers destination
+	 */
 	public Chemin plusCourtChemin(CaseCarte destination) {
 		Chemin chemin;
 		CaseCarteDijkstra caseCourante = (CaseCarteDijkstra) carte.getCase(destination.getLigne(),
@@ -52,6 +68,11 @@ public class Dijkstra {
 		return chemin;
 	}
 
+	/**
+	 * Met a jour les ponderations des voisins non traites d'une case
+	 * 
+	 * @param caseCarte
+	 */
 	private void majVoisins(CaseCarteDijkstra caseCarte) {
 		int lig = caseCarte.getLigne(), col = caseCarte.getColonne();
 		for (Direction dir : Direction.values()) {

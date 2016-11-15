@@ -4,12 +4,16 @@ import robots.EtatRobot;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
 
-public class FinRemplissage extends Evenement{
+/**
+ * Evenement de fin de remplissage avec mise a jour effective du reservoir du
+ * robot
+ */
+public class FinRemplissage extends Evenement {
 	private Robot robot;
 
 	public FinRemplissage(long date, SimulationRobotsPompiers simu, Robot robot) {
 		super(date, simu);
-		this.robot=robot;
+		this.robot = robot;
 	}
 
 	@Override
@@ -18,9 +22,9 @@ public class FinRemplissage extends Evenement{
 		robot.setReservoirPlein();
 		robot.setEtat(EtatRobot.INACTIF);
 	}
-	
+
 	@Override
-	public String toString () {
+	public String toString() {
 		return new String(super.toString() + "finRempl");
 	}
 }

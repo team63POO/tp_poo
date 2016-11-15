@@ -19,7 +19,7 @@ public class RobotChenilles extends Robot {
 	/** niveau du réservoir en L */
 	private long niveauReservoir;
 	/** chemin du fichier image representant le robot */
-	private final static String fichierImage = "resources/imagesrobots//robot_chenilles.png";
+	private final static String fichierImage = "resources/images/robots/robot_chenilles.png";
 
 	public RobotChenilles(int lig, int col) {
 		super(lig, col, vitesseBase);

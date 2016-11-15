@@ -4,6 +4,11 @@ import carte.CaseCarte;
 import carte.Direction;
 import physique.Temps;
 
+/**
+ * Extension d'une case de carte avec ajout des attributs utiles a l'algorithme
+ * de Dijkstra
+ *
+ */
 public class CaseCarteDijkstra extends CaseCarte {
 	private Direction prec;
 	private long poids;
@@ -43,6 +48,7 @@ public class CaseCarteDijkstra extends CaseCarte {
 
 	@Override
 	public String toString() {
-		return new String(super.toString() + " prec = " + this.getPrec() + ", poids = " + this.getPoids() + ", berge = " + this.isBerge());
+		return new String(super.toString() + " prec = " + this.getPrec() + ", poids = " + this.getPoids() + ", berge = "
+				+ this.isBerge());
 	}
 }

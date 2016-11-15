@@ -1,5 +1,8 @@
 package evenement;
 
+/**
+ * Evenement de demande d'ordres sur un robot particulier
+ */
 import robots.EtatRobot;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
@@ -21,6 +24,6 @@ public class DemandeOrdres extends Evenement {
 
 	@Override
 	public String toString() {
-		return new String(super.toString() + "finIncendie");
+		return new String(super.toString() + "demandeOrdres");
 	}
 }

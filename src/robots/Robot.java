@@ -26,6 +26,7 @@ public abstract class Robot {
 		this.setColonne(colonne);
 		this.setVitesse(vitesse);
 		this.setEtat(EtatRobot.ATTENTE_ORDRES);
+		this.dateDebutArrosage = -1;
 		this.setFinAction(null);
 	}
 
@@ -109,6 +110,8 @@ public abstract class Robot {
 	}
 
 	public long getDateDebutArrosage() {
+		if (dateDebutArrosage<0)
+			throw new UnsupportedOperationException("date de début d'arrosage non initialisée");
 		return dateDebutArrosage;
 	}
 

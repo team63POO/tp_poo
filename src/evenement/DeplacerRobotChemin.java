@@ -4,6 +4,11 @@ import carte.Chemin;
 import robots.Robot;
 import simulation.SimulationRobotsPompiers;
 
+/**
+ * Evenement de deplacement d'un robot selon un chemin en utilisant une serie de
+ * deplacements elementaires
+ *
+ */
 public class DeplacerRobotChemin extends Evenement {
 	private Robot robot;
 	private Chemin chemin;
@@ -24,6 +29,6 @@ public class DeplacerRobotChemin extends Evenement {
 
 	@Override
 	public String toString() {
-		return new String(super.toString() + "depl chemin");
+		return new String(super.toString() + "deplChemin");
 	}
 }

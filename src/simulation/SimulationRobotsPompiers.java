@@ -47,7 +47,7 @@ public class SimulationRobotsPompiers implements Simulable {
 	 * Taille des cases dans la fenetre graphique, a modifier si la carte est
 	 * grande et depasse de la fenetre
 	 */
-	private final static int tailleCase = 20;
+	private final static int tailleCase = 30;
 
 	public SimulationRobotsPompiers(GUISimulator gui, String fichierCarte) {
 		this.fichierCarte = fichierCarte;
@@ -81,6 +81,9 @@ public class SimulationRobotsPompiers implements Simulable {
 		strat.donnerOrdresRobots();
 	}
 
+	/**
+	 * Dessine les donnees physiques de la simulation sur la fenetre graphique
+	 */
 	private void draw() {
 		int nbColonnes = donSimu.carte.getNbColonnes(), nbLignes = donSimu.carte.getNbLignes();
 
@@ -168,7 +171,6 @@ public class SimulationRobotsPompiers implements Simulable {
 	@Override
 	public void next() {
 		Evenement event;
-		System.out.println("next...events : " + events);
 		try {
 			this.incrementeDate();
 		} catch (UnsupportedOperationException e) {
